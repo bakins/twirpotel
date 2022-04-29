@@ -3,6 +3,7 @@ package twirpotel_test
 import (
 	"context"
 	"errors"
+	"math/rand"
 	"net/http"
 	"net/http/httptest"
 	"sync"
@@ -23,11 +24,26 @@ import (
 func ExampleServerInterceptor() {
 	// Add the server interceptor to your twirp server
 	ts := example.NewHaberdasherServer(
-		&server{}, // server implements example.Haberdasher
+		&randomHaberdasher{}, // implements example.Haberdasher
 		twirp.WithServerInterceptors(twirpotel.ServerInterceptor()),
 	)
 
 	http.Handle(ts.PathPrefix(), ts)
+}
+
+type randomHaberdasher struct{}
+
+func (h *randomHaberdasher) MakeHat(ctx context.Context, size *example.Size) (*example.Hat, error) {
+	if size.Inches <= 0 {
+		return nil, twirp.InvalidArgumentError("Inches", "I can't make a hat that small!")
+	}
+	colors := []string{"white", "black", "brown", "red", "blue"}
+	names := []string{"bowler", "baseball cap", "top hat", "derby"}
+	return &example.Hat{
+		Size:  size.Inches,
+		Color: colors[rand.Intn(len(colors))],
+		Name:  names[rand.Intn(len(names))],
+	}, nil
 }
 
 func TestInterceptors(t *testing.T) {
