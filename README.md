@@ -1,5 +1,6 @@
 # Twirp Opentelemetry Tracing for Go
-[![GoDoc](https://pkg.go.dev/badge/github.com/bakins/twirpotel)][API Docs]
+
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/bakins/twirpotel)](https://pkg.go.dev/github.com/bakins/twirpotel)
 
 `twirpotel` provides client and server interceptors for [twirp](https://github.com/twitchtv/twirp).
 
