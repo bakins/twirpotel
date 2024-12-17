@@ -33,16 +33,18 @@ func ExampleServerInterceptor() {
 
 type randomHaberdasher struct{}
 
-func (h *randomHaberdasher) MakeHat(ctx context.Context, size *example.Size) (*example.Hat, error) {
+func (h *randomHaberdasher) MakeHat(_ context.Context, size *example.Size) (*example.Hat, error) {
 	if size.Inches <= 0 {
 		return nil, twirp.InvalidArgumentError("Inches", "I can't make a hat that small!")
 	}
 	colors := []string{"white", "black", "brown", "red", "blue"}
 	names := []string{"bowler", "baseball cap", "top hat", "derby"}
 	return &example.Hat{
-		Size:  size.Inches,
+		Size: size.Inches,
+		// nolint:gosec
 		Color: colors[rand.Intn(len(colors))],
-		Name:  names[rand.Intn(len(names))],
+		// nolint:gosec
+		Name: names[rand.Intn(len(names))],
 	}, nil
 }
 

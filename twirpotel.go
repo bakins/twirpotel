@@ -8,6 +8,7 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/codes"
+	semconv "go.opentelemetry.io/otel/semconv/v1.10.0"
 	"go.opentelemetry.io/otel/trace"
 )
 
@@ -121,7 +122,7 @@ func commonAtrributes(ctx context.Context) (string, []attribute.KeyValue) {
 	serviceName, _ := twirp.ServiceName(ctx)
 	methodName, _ := twirp.MethodName(ctx)
 
-	fullMethod := packageName + "." + "." + serviceName + "/" + methodName
+	fullMethod := packageName + "." + serviceName + "/" + methodName
 
 	return fullMethod, []attribute.KeyValue{
 		{
@@ -136,6 +137,9 @@ func commonAtrributes(ctx context.Context) (string, []attribute.KeyValue) {
 			Key:   MethodNameKey,
 			Value: attribute.StringValue(methodName),
 		},
+		semconv.RPCSystemKey.String("twirp"),
+		semconv.RPCMethodKey.String(methodName),
+		semconv.RPCServiceKey.String(packageName + "." + serviceName),
 	}
 }
 
